@@ -1,0 +1,12 @@
+{
+  "name": "derive",
+  "owner": { "name": "Derivecode" },
+  "metadata": { "description": "Build apps on Derive from Cursor." },
+  "plugins": [
+    {
+      "name": "derive",
+      "source": "plugins/cursor",
+      "description": "Build apps on Derive: your business's data, sign-in and hosting, with one sentence."
+    }
+  ]
+}

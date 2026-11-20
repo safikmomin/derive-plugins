@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "derive",
+  "version": "0.1.0",
+  "description": "Build apps on Derive: your business's data, sign-in and hosting, with one sentence.",
+  "author": { "name": "Derivecode" },
+  "homepage": "https://app.derivecode.com",
+  "license": "UNLICENSED",
+  "keywords": ["derive", "apps", "deploy", "sdk"]
+}

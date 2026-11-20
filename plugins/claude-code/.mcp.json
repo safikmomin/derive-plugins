@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "derive": {
+      "type": "http",
+      "url": "https://app.derivecode.com/mcp"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "derive",
+  "displayName": "Derive",
+  "version": "0.1.0",
+  "description": "Build apps on Derive: your business's data, sign-in and hosting, with one sentence.",
+  "author": { "name": "Derivecode" },
+  "homepage": "https://app.derivecode.com"
+}
