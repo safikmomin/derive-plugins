@@ -9,6 +9,17 @@ Derive holds the owner's business data. An app is a web app that runs on Derive 
 and calls Derive's API as the signed-in member. Read the app's `AGENTS.md` before you change
 it: it has the platform's rules.
 
+## Choose the workspace first
+
+One Derive connection works in every workspace the owner belongs to: each store, a
+personal workspace, and their sandbox. Every tool that acts in one (`register_app`,
+`start_deploy`, `install_app`, `find`, `query`, the change tools and the rest) takes a
+required `workspace`, its `id`. When it isn't clear which workspace the owner means, call
+`list_workspaces` first and ask them; never guess between two stores. Use the same
+`workspace` for every call in a task, and what you may do there is the owner's role in it.
+A Personal workspace has no store data (`not_a_store`); `not_a_member` means the id is
+wrong, so call `list_workspaces` again.
+
 ## Build the app
 
 1. Start from the Derive app template, `templates/app` in Derive's repository
@@ -22,7 +33,8 @@ it: it has the platform's rules.
    reason each. The owner approves the scopes when they install the app.
 3. Build the screens with `@derive/ui` and read or write data through `@derive/sdk`. Never
    keep business data in the app.
-4. Try it in the owner's sandbox org, which holds sample data. Never test against the real
+4. Try it in the owner's sandbox (the workspace `list_workspaces` marks `sandbox`), which
+   holds sample data. Never test against the real
    business's data unless the owner asks for a copy.
 5. Check it: `pnpm build` must pass before any deploy.
 
@@ -46,6 +58,24 @@ Use `rollback` to return to an earlier deploy, and `get_recent_errors` before gu
 bug.
 `delete_site` removes a site and its previews for good; confirm with the person first.
 
+## Apps whose source is with Derive (create_app)
+
+- **Try a change on a branch.** `write_files` with `branch` (such as `new-colours`) commits
+  there, and Derive builds it as a preview at `<site>--<branch>.derivesites.com`, without
+  touching the live app. `deploy_status` with the commit says when it's live. A site has at
+  most 3 previews, each deleted 7 days after its last change.
+- **Make it live only when the owner says so:** `publish` with the branch moves `main` to it
+  (`dry_run` lists the commits it brings in), and Derive builds `main`. If `main` changed
+  since the branch started, it's refused with `branch_behind`: write the change again on
+  top of `main`, then publish.
+- `delete_branch` deletes a branch and its preview; confirm with the owner first unless
+  it was published.
+- **Undo:** `revert` undoes a change in the source with a new commit, and that's built and
+  goes live like any change: use it to undo for good. `rollback` puts an earlier stored
+  deploy back online in seconds without touching the source: use it when the live app is
+  broken right now, then fix or `revert` the source, since the next change to `main`
+  replaces the rollback.
+
 ## The rules
 
 - Never ask the owner for the app secret, and never write it into code, logs or messages.
@@ -59,5 +89,5 @@ bug.
 - Apps get no database of their own. Data lives in custom tables, reached through the API.
 - Impactful changes (deleting core records, bulk changes) wait for the owner's approval.
   Show the owner the preview and call `approve` only when they say yes.
-- Deploys are refused in a sandbox. Deploy from the business's own org, after the owner
-  installs the app there.
+- Deploys are refused in a sandbox. Deploy in the business's own workspace (`workspace` set
+  to its id), after the owner installs the app there.
