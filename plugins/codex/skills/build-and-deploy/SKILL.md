@@ -20,6 +20,18 @@ personal workspace, and their sandbox. Every tool that acts in one takes a requi
 A Personal workspace has no store data (`not_a_store`); `not_a_member` means the id is
 wrong, so call `list_workspaces` again.
 
+For a question across stores ("which of my stores…", "in all my stores"), call
+`query_stores` once with `stores: "all"` (or a list of ids) instead of `query` in each:
+Derive combines the stores, and its `total` is the answer. Don't add up or average the
+stores' numbers yourself, and tell the owner about any store listed in `failed`.
+
+For a change across stores ("raise Marlboro Red by 10 cents in every store"), call
+`change_stores` with `dry_run: true` once, show the owner the combined preview (per store,
+old and new values, and stores where nothing matched), and apply it with its `change_id`
+only after they say yes. If some stores weren't reached, call it again with the same
+`change_id`: it finishes only those. Approvals it raises in several stores are decided
+together with `approve_store_change`, after the owner says yes.
+
 Apps are made in the business's own workspace, not the sandbox (`create_app` is refused
 there). Only an owner can create, change, deploy or install an app.
 
@@ -74,6 +86,9 @@ guessing at a bug.
 - `rollback` puts an earlier stored deploy back online in seconds without touching the
   source: use it when the live app is broken right now, then fix or `revert` the source,
   since the next change to `main` replaces the rollback.
+- To take an app offline, `delete_site` on its site: its source stays, to deploy again.
+  To remove the app for good (its installs, secrets and source), `delete_site` first,
+  then `delete_app`. Both can't be undone: confirm with the owner, with `dry_run` first.
 
 ## Keys and secrets
 
